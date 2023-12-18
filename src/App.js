@@ -1,13 +1,8 @@
 import "./App.css";
-import { AppProvider } from "./contexts/AppContext";
-import TodoPage from "./page/todoPage";
+import Todo from "./features/todo/Todo";
 
 function App() {
-  return (
-    <AppProvider>
-      <TodoPage />
-    </AppProvider>
-  );
+  return <Todo />;
 }
 
 export default App;
