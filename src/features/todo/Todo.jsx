@@ -12,8 +12,8 @@ const Todo = () => {
 
   return (
     <Box p="3">
-      <Flex gap="5">
-        <Box w="50%">
+      <Flex gap="5" flexWrap={{ base: "wrap", md: "nowrap" }}>
+        <Box w={["50%", "100%"]}>
           <Heading
             bgColor="lightblue"
             fontSize="xxx-large"
@@ -49,7 +49,7 @@ const Todo = () => {
           />
         </Box>
 
-        <Flex direction="column" w="50%" gap="3">
+        <Flex direction="column" w={["50%", "100%"]} gap="3">
           {data.map((name, index) => (
             <TodoItem
               key={index}
