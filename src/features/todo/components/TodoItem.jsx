@@ -12,6 +12,7 @@ const TodoItem = ({ name, index, setUpdatedData, setIsCreateUpdate }) => {
       px="3"
       gap="3"
       alignItems="center"
+      boxShadow="md"
       bgColor={index % 2 === 0 ? "darkturquoise" : "cyan.700"}
     >
       <Text textColor="white" fontWeight="bold">

@@ -1,4 +1,12 @@
-import { Box, Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Switch,
+  Textarea,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { createData, updateData } from "../todoSlice";
@@ -11,10 +19,21 @@ const CreateUpdate = ({
 }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
     setName(updatedData?.name || "");
-  }, [updatedData?.name]);
+    setDescription(updatedData?.description || "");
+    setDeadline(updatedData?.deadline || "");
+    setIsDone(updatedData?.is_done || false);
+  }, [
+    updatedData?.deadline,
+    updatedData?.description,
+    updatedData?.is_done,
+    updatedData?.name,
+  ]);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -32,7 +51,7 @@ const CreateUpdate = ({
   return (
     <Box flex="1" display={isCreateUpdate ? "block" : "none"}>
       <form onSubmit={onSubmit}>
-        <FormControl mb="3">
+        <FormControl mb="3" isRequired>
           <FormLabel>Name</FormLabel>
           <Input
             type="text"
@@ -40,6 +59,53 @@ const CreateUpdate = ({
             onChange={(e) => setName(e.target.value)}
             _focusVisible={{
               boxShadow: "0 0 0 2px lightblue",
+            }}
+          />
+        </FormControl>
+
+        <FormControl mb="3" isRequired>
+          <FormLabel>Description</FormLabel>
+          <Textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            _focusVisible={{
+              boxShadow: "0 0 0 2px lightblue",
+            }}
+          />
+        </FormControl>
+
+        <FormControl mb="3" isRequired>
+          <FormLabel>Deadline</FormLabel>
+          <Input
+            type="datetime-local"
+            value={deadline}
+            onChange={(e) => setDeadline(e.target.value)}
+            maxW="200px"
+            _focusVisible={{
+              boxShadow: "0 0 0 2px lightblue",
+            }}
+          />
+        </FormControl>
+
+        <FormControl
+          display={updatedData ? "flex" : "none"}
+          alignItems="center"
+          mb="3"
+          isRequired
+        >
+          <FormLabel>Done</FormLabel>
+          <Switch
+            value={isDone}
+            onChange={(e) => setIsDone(e.target.value)}
+            _checked={{
+              ".chakra-switch__track": {
+                bgColor: "lightblue",
+              },
+            }}
+            sx={{
+              ".chakra-switch__track": {
+                bgColor: "darkgray",
+              },
             }}
           />
         </FormControl>
