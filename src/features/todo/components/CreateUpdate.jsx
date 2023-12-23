@@ -87,28 +87,25 @@ const CreateUpdate = ({
           />
         </FormControl>
 
-        <FormControl
-          display={updatedData ? "flex" : "none"}
-          alignItems="center"
-          mb="3"
-          isRequired
-        >
-          <FormLabel>Done</FormLabel>
-          <Switch
-            value={isDone}
-            onChange={(e) => setIsDone(e.target.value)}
-            _checked={{
-              ".chakra-switch__track": {
-                bgColor: "lightblue",
-              },
-            }}
-            sx={{
-              ".chakra-switch__track": {
-                bgColor: "darkgray",
-              },
-            }}
-          />
-        </FormControl>
+        {updatedData && (
+          <FormControl display="flex" alignItems="center" mb="3" isRequired>
+            <FormLabel>Done</FormLabel>
+            <Switch
+              value={isDone}
+              onChange={(e) => setIsDone(e.target.value)}
+              _checked={{
+                ".chakra-switch__track": {
+                  bgColor: "lightblue",
+                },
+              }}
+              sx={{
+                ".chakra-switch__track": {
+                  bgColor: "darkgray",
+                },
+              }}
+            />
+          </FormControl>
+        )}
 
         <Button
           size="sm"
@@ -139,7 +136,15 @@ const CreateUpdate = ({
             bgColor: "lightgreen",
             opacity: 0.9,
           }}
-          isDisabled={name.length === 0 || name === updatedData?.name}
+          isDisabled={
+            name.length === 0 ||
+            name === updatedData?.name ||
+            description.length === 0 ||
+            description === updatedData?.description ||
+            deadline === "" ||
+            deadline === updatedData?.deadline ||
+            isDone === updateData?.is_done
+          }
         >
           {updatedData ? "Update" : "Create"}
         </Button>
