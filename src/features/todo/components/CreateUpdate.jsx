@@ -7,7 +7,7 @@ import {
   Switch,
   Textarea,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { createData, updateData } from "../todoSlice";
 
@@ -38,15 +38,34 @@ const CreateUpdate = ({
   const onSubmit = (e) => {
     e.preventDefault();
     if (updatedData) {
-      dispatch(updateData(name, updatedData.index));
+      dispatch(
+        updateData(updatedData?.id, name, description, deadline, isDone)
+      );
     } else {
-      dispatch(createData(name));
+      dispatch(createData(name, description, deadline));
     }
 
     setName("");
+    setDescription("");
+    setDeadline("");
+    setIsDone(false);
     setUpdatedData();
     setIsCreateUpdate(false);
   };
+
+  const isDisabled = useMemo(() => {
+    if (updatedData) {
+      return (
+        (name.length === 0 || name === updatedData?.name) &&
+        (description.length === 0 ||
+          description === updatedData?.description) &&
+        (deadline === "" || deadline === updatedData?.deadline) &&
+        isDone === updatedData?.is_done
+      );
+    } else {
+      return name.length === 0 || description.length === 0 || deadline === "";
+    }
+  }, [deadline, description, isDone, name, updatedData]);
 
   return (
     <Box flex="1" display={isCreateUpdate ? "block" : "none"}>
@@ -88,11 +107,11 @@ const CreateUpdate = ({
         </FormControl>
 
         {updatedData && (
-          <FormControl display="flex" alignItems="center" mb="3" isRequired>
+          <FormControl display="flex" alignItems="center" mb="3">
             <FormLabel>Done</FormLabel>
             <Switch
-              value={isDone}
-              onChange={(e) => setIsDone(e.target.value)}
+              isChecked={isDone}
+              onChange={() => setIsDone(!isDone)}
               _checked={{
                 ".chakra-switch__track": {
                   bgColor: "lightblue",
@@ -136,15 +155,7 @@ const CreateUpdate = ({
             bgColor: "lightgreen",
             opacity: 0.9,
           }}
-          isDisabled={
-            name.length === 0 ||
-            name === updatedData?.name ||
-            description.length === 0 ||
-            description === updatedData?.description ||
-            deadline === "" ||
-            deadline === updatedData?.deadline ||
-            isDone === updateData?.is_done
-          }
+          isDisabled={isDisabled}
         >
           {updatedData ? "Update" : "Create"}
         </Button>

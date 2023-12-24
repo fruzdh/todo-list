@@ -1,29 +1,47 @@
 import { createSlice } from "@reduxjs/toolkit";
+const { v4: uuidv4 } = require("uuid");
 
 const todoSlice = createSlice({
   name: "todo",
   initialState: {
-    data: [],
+    data: {},
   },
   reducers: {
-    createData: (state, action) => {
-      state.data.push(action.payload);
-    },
-    updateData: {
+    createData: {
       reducer: (state, action) => {
-        state.data[action.payload.index] = action.payload.name;
+        state.data[uuidv4()] = action.payload;
       },
-      prepare: (name, index) => {
+      prepare: (name, description, deadline) => {
         return {
           payload: {
             name: name,
-            index: index,
+            description: description,
+            deadline: deadline,
+            is_done: false,
+          },
+        };
+      },
+    },
+    updateData: {
+      reducer: (state, action) => {
+        state.data[action.payload.id] = action.payload.data;
+      },
+      prepare: (id, name, description, deadline, isDone) => {
+        return {
+          payload: {
+            data: {
+              name: name,
+              description: description,
+              deadline: deadline,
+              is_done: isDone,
+            },
+            id: id,
           },
         };
       },
     },
     deleteData: (state, action) => {
-      state.data.splice(action.payload, 1);
+      delete state.data[action.payload];
     },
   },
 });

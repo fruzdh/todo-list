@@ -1,59 +1,76 @@
-import { Flex, Button, Spacer, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Button,
+  Spacer,
+  Text,
+  Heading,
+  Box,
+  Tag,
+} from "@chakra-ui/react";
 import { deleteData } from "../todoSlice";
 import { useDispatch } from "react-redux";
 
-const TodoItem = ({ name, index, setUpdatedData, setIsCreateUpdate }) => {
+const TodoItem = ({ item, index, setUpdatedData, setIsCreateUpdate }) => {
   const dispatch = useDispatch();
 
   return (
-    <Flex
+    <Box
       borderRadius="md"
       w="100%"
-      px="3"
+      p="3"
       gap="3"
-      alignItems="center"
       boxShadow="md"
       bgColor={index % 2 === 0 ? "darkturquoise" : "cyan.700"}
+      textColor="white"
     >
-      <Text textColor="white" fontWeight="bold">
-        {name}
+      <Heading fontSize="16px" noOfLines={2}>
+        {item.name}
+      </Heading>
+      <Text fontSize="14px" noOfLines={5} my="2">
+        {item.description}
       </Text>
-      <Spacer />
-      <Button
-        bgColor="lightgreen"
-        textColor="white"
-        my="3"
-        size="sm"
-        boxShadow="md"
-        onClick={() => {
-          setUpdatedData({ name: name, index: index });
-          setIsCreateUpdate(true);
-        }}
-        _hover={{
-          bgColor: "lightgreen",
-          opacity: 0.9,
-        }}
-      >
-        Edit
-      </Button>
-      <Button
-        size="sm"
-        bgColor="lightcoral"
-        textColor="white"
-        boxShadow="md"
-        onClick={() => {
-          dispatch(deleteData(index));
-          setUpdatedData();
-          setIsCreateUpdate(false);
-        }}
-        _hover={{
-          bgColor: "lightcoral",
-          opacity: 0.9,
-        }}
-      >
-        Delete
-      </Button>
-    </Flex>
+      <Flex gap="3" flexWrap="wrap">
+        <Tag bgColor="#FFD6A5" boxShadow="md">
+          {item.status}
+        </Tag>
+        <Spacer />
+        <Button
+          bgColor="lightgreen"
+          textColor="white"
+          size="sm"
+          boxShadow="md"
+          minW="50px"
+          onClick={() => {
+            setUpdatedData({ ...item });
+            setIsCreateUpdate(true);
+          }}
+          _hover={{
+            bgColor: "lightgreen",
+            opacity: 0.9,
+          }}
+        >
+          Edit
+        </Button>
+        <Button
+          size="sm"
+          bgColor="lightcoral"
+          textColor="white"
+          boxShadow="md"
+          minW="70px"
+          onClick={() => {
+            dispatch(deleteData(item.id));
+            setUpdatedData();
+            setIsCreateUpdate(false);
+          }}
+          _hover={{
+            bgColor: "lightcoral",
+            opacity: 0.9,
+          }}
+        >
+          Delete
+        </Button>
+      </Flex>
+    </Box>
   );
 };
 

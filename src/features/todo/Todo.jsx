@@ -50,15 +50,42 @@ const Todo = () => {
         </Box>
 
         <Flex direction="column" w={["50%", "100%"]} gap="3">
-          {data.map((name, index) => (
-            <TodoItem
-              key={index}
-              name={name}
-              index={index}
-              setUpdatedData={setUpdatedData}
-              setIsCreateUpdate={setIsCreateUpdate}
-            />
-          ))}
+          {Object.keys(data)
+            .map((key) => ({
+              id: key,
+              ...data[key],
+              status: data[key].is_done
+                ? "DONE"
+                : new Date(data[key].deadline).getTime() < new Date().getTime()
+                ? `(LATE) ${new Date(data[key].deadline).toString()}`
+                : new Date(data[key].deadline).toString(),
+            }))
+            .sort((a, b) => {
+              if (a.is_done && !b.is_done) {
+                return 1;
+              } else if (!a.is_done && b.is_done) {
+                return -1;
+              } else if (a.is_done && b.is_done) {
+                return (
+                  new Date(b.deadline).getTime() -
+                  new Date(a.deadline).getTime()
+                );
+              } else {
+                return (
+                  new Date(a.deadline).getTime() -
+                  new Date(b.deadline).getTime()
+                );
+              }
+            })
+            .map((item, index) => (
+              <TodoItem
+                key={item.id}
+                item={item}
+                index={index}
+                setUpdatedData={setUpdatedData}
+                setIsCreateUpdate={setIsCreateUpdate}
+              />
+            ))}
         </Flex>
       </Flex>
     </Box>
